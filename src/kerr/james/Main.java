@@ -1,8 +1,8 @@
 package kerr.james;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -14,23 +14,23 @@ public class Main {
     public static final String RESET = "\0";
     //Use the index as our lookup value
     public static List<String> dictionary  = new ArrayList<String>();
-    public static final String dictLocation = "dict.txt";
     public static final String test = "TOBEORNOTTOBEORTOBEEORNOT";
 
     public static void main(String[] args) {
         try  {
-            Stream<String> stream = Files.lines(Paths.get(dictLocation));
+            Stream<String> stream = Files.lines(Paths.get(args[0]));
             stream.forEach(dictionary::add);
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
         //So we know where to reset back to
         int initalDictSize = dictionary.size();
         String output = "";
 
         try  {
-            try(BufferedReader br = new BufferedReader(new FileReader("test.txt"))) {
+            try(BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
                 String last = "";
                 for(String line; (line = br.readLine()) != null; ) {
                     if(line.equals(RESET)){
@@ -68,9 +68,9 @@ public class Main {
         }
 
         System.out.println(Arrays.toString(output.toCharArray()));
-        System.out.println(Arrays.toString(test.toCharArray()));
-        System.out.println(output.equals(test));
-        System.out.println("done");
+//        System.out.println(Arrays.toString(test.toCharArray()));
+//        System.out.println(output.equals(test));
+//        System.out.println("done");
     }
 }
 
