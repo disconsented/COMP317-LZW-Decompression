@@ -1,5 +1,7 @@
 package kerr.james;
 
+import sun.security.ssl.Debug;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,6 +9,40 @@ import java.math.BigInteger;
 
 public class Unpacker {
     public static void main(String[] args){
+        try  {
+            try(BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+//                int max = 1;
+//                max <<= Integer.MAX_VALUE;
+//                int aRandomNumber = 38745839;
+//                max = max | aRandomNumber;
+//                System.out.println(":"+Integer.toBinaryString(1 << Integer.MAX_VALUE));
+//                System.out.println(":"+Integer.toBinaryString(max));
+//
+//
+//                System.out.println(":"+Integer.toBinaryString(1 << Integer.MAX_VALUE));
+                //Read in the first 32 bits to get the maximum size
+                int max = 0;
+                for (int i = 0; i < 32; i++) {
+                    max <<= 1;
+                    max = max | br.read();
+                }
+                //Now we know what to look for, keep going
+                int size = 0;
+                int current = 0;
+                //Keep note of bits read, pack them in and then read them out
+                for (int segment; (segment = br.read()) != -1; ) {
+                    if(max > size){
+                        current <<= 1;
+                        current = current | segment;
+                    } else {
+                        System.out.println(current);
+                    }
+                }
+            }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
 //        int[] testEncode = {7,8,9,10,11,12,13};
 //
 //        int max = 3;
