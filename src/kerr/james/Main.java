@@ -1,15 +1,14 @@
-package kerr.james;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class Decoder {
+public class Main {
     private static final String RESET = "\0";
     //Use the index as our lookup value
     private static List<String> dictionary  = new ArrayList<>();
@@ -30,7 +29,11 @@ public class Decoder {
         try  {
             try(BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
                 //Keep reference of the last phrase for building a new one
-                String last = "";
+                String entry;
+                String ch;
+                int prevcode, currcode;
+                prevcode = Integer.parseInt(br.readLine());
+                System.out.println(dictionary.get(prevcode));
                 for(String line; (line = br.readLine()) != null; ) {
                     //When we get the reset symbol, remove all new entries
                     if(line.equals(RESET)){
@@ -38,29 +41,21 @@ public class Decoder {
                     } else {
                         try {
                             //New line == new phrase
-                            int phraseNumber = Integer.parseInt(line);
-                            String phrase = dictionary.get(phraseNumber);
-
-                            //Just in case catch should never be true
-                            if(phrase == null){
-                                System.out.println("Unknown " + phraseNumber);
-                            }
-
-                            //Adding new phrases if they don't exist
-                            String possibleNew = last+phrase;
-                            if(!dictionary.contains(possibleNew)){
-                                dictionary.add(possibleNew);
-                            }
-                            last = phrase;
-                            //Printing the phrases as we get them, not sure why its on a new line
-                            System.out.println(last);
-
+                            currcode = Integer.parseInt(line);
+                            entry = dictionary.get(currcode);
+                            System.out.println(entry);
+                            ch = entry.substring(0,1);
+                            String toAdd = dictionary.get(prevcode) + ch;
+                            System.out.println(":"+toAdd);
+                            dictionary.add(toAdd);
+                            prevcode = currcode;
                         } catch (NumberFormatException e){
                             //Do nothing
                             e.printStackTrace();
                         }
                     }
                 }
+//                System.out.println(output);
 
             }
 
