@@ -1,43 +1,63 @@
-package kerr.james;
-
 import sun.security.ssl.Debug;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 public class Unpacker {
     public static void main(String[] args){
         try  {
             try(BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
-//                int max = 1;
-//                max <<= Integer.MAX_VALUE;
-//                int aRandomNumber = 38745839;
-//                max = max | aRandomNumber;
-//                System.out.println(":"+Integer.toBinaryString(1 << Integer.MAX_VALUE));
-//                System.out.println(":"+Integer.toBinaryString(max));
-//
-//
-//                System.out.println(":"+Integer.toBinaryString(1 << Integer.MAX_VALUE));
-                //Read in the first 32 bits to get the maximum size
+                //Read in the first 10 characters since that should always be the right length
+                //Remember to deal with UTF8 character codes (-48)
+//                System.out.println(maxStr);
                 int max = 0;
-                for (int i = 0; i < 32; i++) {
-                    max <<= 1;
-                    max = max | br.read();
-                }
-                //Now we know what to look for, keep going
-                int size = 0;
-                int current = 0;
-                //Keep note of bits read, pack them in and then read them out
+
                 for (int segment; (segment = br.read()) != -1; ) {
-                    if(max > size){
-                        current <<= 1;
-                        current = current | segment;
+                    if (segment == 48){
+                        max++;
                     } else {
-                        System.out.println(current);
+                        break;
                     }
                 }
+
+//                ArrayList<Integer> ints = new ArrayList<>();
+                StringBuilder builder = new StringBuilder();
+
+
+                for (int segment; (segment = br.read()) != -1; ) {
+                    //UTF8 so -48
+                    builder.append(segment-48);
+                    if (builder.length() == max){
+                        System.out.println(Integer.parseInt(builder.toString(), 2));
+                        builder = new StringBuilder();
+                    }
+                }
+
+//                int max = Integer.parseInt(br.readLine());
+//                max = bitExtracted(max, BigInteger.valueOf(max).bitLength()-2, 1);
+//                System.out.println(max);
+//                int bitCount = 0;
+//                int current = 0;
+//                //Keep note of bits read, pack them in and then read them out
+//                for (String segment; (segment = br.readLine()) != null && !segment.equals(""); ) {
+//                    int number = Integer.parseInt(segment)-48;
+////                    System.out.println(number);
+//                    if(max > bitCount){
+//                        int bits = BigInteger.valueOf(number).bitLength();
+//                        bitCount += bits;
+////                        System.out.println(bits+":"+bitCount);
+//                        current <<= bits;
+//                        current = current | number;
+////                        System.out.println(current);
+//                    } else {
+//                        System.out.println(current);
+//                        current = 0;
+//                        bitCount = 0;
+//                    }
+//                }
             }
             } catch (Exception e){
                 e.printStackTrace();
