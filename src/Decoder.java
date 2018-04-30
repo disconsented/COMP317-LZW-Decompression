@@ -39,13 +39,12 @@ public class Decoder {
                         dictionary = dictionary.subList(0, initialDictSize);
                     } else {
                         try {
-                            //New line == new phrase
                             currcode = Integer.parseInt(line);
+                            //-1 to adjust from indexing schemes used between the encoder and everything else
                             entry = dictionary.get(currcode - 1);
                             System.out.print(entry);
                             ch = entry.substring(0, 1);
                             String toAdd = dictionary.get(prevcode - 1) + ch;
-//                            System.out.println(":"+toAdd);
                             dictionary.add(toAdd);
                             prevcode = currcode;
                         } catch (NumberFormatException e) {
@@ -54,7 +53,6 @@ public class Decoder {
                         }
                     }
                 }
-//                System.out.println(output);
 
             }
 
